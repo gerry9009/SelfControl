@@ -9,7 +9,7 @@ from notifypy import Notify
 
 
 
-HOSTPATH = ".\hosts" #".\hosts" #ezt kell használni, hogy működjön >> "c:\Windows\System32\drivers\etc\hosts"
+HOSTPATH = "c:\Windows\System32\drivers\etc\hosts" #".\hosts" #use this path >> "c:\Windows\System32\drivers\etc\hosts"
 REDIRECT = "127.0.0.1"
 
 webpages = []
@@ -25,13 +25,11 @@ BASICWEBPAGES = (   'www.facebook.com',
 startList = []
 
 
-mainBG = "#ededed" #"#ededed"
+mainBG = "#ededed"
 clockBG = "#ffffff"
 mainFont = "Helvetica"
 buttonBG = "#ffffff"
 buttonFrame = "#656565"
-
-
 
 
 class MyFunction():
@@ -54,14 +52,7 @@ class MyFunction():
         notification.message = message
         notification.icon = ".\selfcontrol.ico"
         notification.send()
-        """
-        notification.notify(
-            title = title,
-            message = message,
-            timeout = 12
-        )
 
-        """
 
     def fillTheList(items, listbox):
         """
@@ -97,31 +88,19 @@ class MyFunction():
         """
         items = list of webpages 
         """
-        """
-        file = open(HOSTPATH , "r+")
-        content = file.readlines()
-        file.seek(0)
-        
-        
-        
-        for line in content:
-                if not any(item in line for item in items):
-                    file.write(line)
-        """
         file = open(HOSTPATH , "r+")
         content = file.readlines()
         file.seek(0)
     
         i = 0
         while i < len(content):
-        #for line in content:
+        
             if not any(item in content[i] for item in items):
                 file.write(content[i])
             i += 1
     
         file.truncate()
         
-
     def addToList(lista, listbox, entry):
         if entry.get() in lista:
             FailMessage.closeWin(" This item is already \n included in this list ")
@@ -209,7 +188,6 @@ class CountDown(tk.Frame):
         self.minute.set("25")
         self.second.set("00")
 
-        #self.timeFrame = tk.Frame(self.master).grid(row=2, column=0, pady = 10)
         self.frameTime = tk.Frame(self.master, bg=f"{clockBG}")
         self.hourEntry = tk.Entry(self.frameTime, font=f"{mainFont} 14 bold",bg=f"{clockBG}", width=2, relief='solid', borderwidth=0, textvariable=self.hour).grid(row = 0, column= 0 , padx = 5)
         self.minuteEntry = tk.Entry(self.frameTime, font=f"{mainFont} 14 bold", width=2,bg=f"{clockBG}",relief='solid', borderwidth=0, textvariable=self.minute).grid(row = 0, column= 1, padx = 5)
@@ -305,7 +283,7 @@ class ToDoList(tk.Frame):
                                     font=f"{mainFont} 10",
                                     width= 38,
                                     height= 6,
-                                    bg = "#ffffff",#"SystemButtonFace",
+                                    bg = "#ffffff",
                                     bd = 0.5,
                                     fg = "#000000",
                                     highlightthickness=0,
@@ -357,7 +335,7 @@ class BlackList():
             font="Arial 10",
             width= 45,
             height= 8,
-            bg = "#ffffff",#"SystemButtonFace",
+            bg = "#ffffff",
             bd = 0.5,
             fg = "#000000",
             highlightthickness=0,
@@ -393,10 +371,6 @@ class BlackList():
 
         MyFunction.fillTheList(webpages, selfcontrolList)
 
-
-##############################################################
-        #change the background colour of the list items
-        #selfcontrolList.config(0, bg ="blue", fg="white")
 
 class FailMessage():
     def closeWin(message):
@@ -435,16 +409,9 @@ class MainApp(tk.Frame):
 
         self.toDo = ToDoList(master=self)
         self.toDo.grid(pady=10)
-        #self.master.overrideredirect(1)
+    
         
 def onClosing():
-    """
-    MyFunction.allowWebpages(startList)
-    MyFunction.allowWebpages(webpages)
-    MyFunction.saveData(webpages, "web")
-    MyFunction.saveData(toDoListItems, "todo")
-    root.destroy()
-    """
 
     if tk.messagebox.askokcancel("Quit", "Before you quit,\nplease stop the countdown\nwith the \"stop\" button"):
         MyFunction.allowWebpages(startList)
@@ -457,9 +424,9 @@ def onClosing():
 MyFunction.readData(webpages, "web")
 MyFunction.readData(toDoListItems, "todo")
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 
-#def run():
+def run():
     global root
 
     root = tk.Tk()
