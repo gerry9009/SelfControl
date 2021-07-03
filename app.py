@@ -3,17 +3,15 @@ import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
 import time 
-#from plyer import notification
 from notifypy import Notify
-
 
 
 
 HOSTPATH = "c:\Windows\System32\drivers\etc\hosts" #".\hosts" #use this path >> "c:\Windows\System32\drivers\etc\hosts"
 REDIRECT = "127.0.0.1"
 
-webpages = []
-toDoListItems = []
+WEBPAGES = []
+TODOLISTITEMS = []
 
 BASICWEBPAGES = (   'www.facebook.com', 
                     'www.wikipedia.com', 
@@ -22,14 +20,14 @@ BASICWEBPAGES = (   'www.facebook.com',
                     'www.instagram.com',
                     'www.reddit.com')
 
-startList = []
+STARTLIST = []
 
 
-mainBG = "#ededed"
-clockBG = "#ffffff"
-mainFont = "Helvetica"
-buttonBG = "#ffffff"
-buttonFrame = "#656565"
+MAINBG = "#ededed"
+CLOCKBG = "#ffffff"
+MAINFONT = "Helvetica"
+BUTTONBG = "#ffffff"
+BUTTONFRAME = "#656565"
 
 
 class MyFunction():
@@ -178,7 +176,7 @@ class CountDown(tk.Frame):
     
     def __init__(self,master=None,**kw):
         tk.Frame.__init__(self,master=master,**kw)
-        self.master.configure(bg=f"{mainBG}")
+        self.master.configure(bg=f"{MAINBG}")
 
         self.hour = StringVar()
         self.minute = StringVar()
@@ -188,23 +186,23 @@ class CountDown(tk.Frame):
         self.minute.set("25")
         self.second.set("00")
 
-        self.frameTime = tk.Frame(self.master, bg=f"{clockBG}")
-        self.hourEntry = tk.Entry(self.frameTime, font=f"{mainFont} 14 bold",bg=f"{clockBG}", width=2, relief='solid', borderwidth=0, textvariable=self.hour).grid(row = 0, column= 0 , padx = 5)
-        self.minuteEntry = tk.Entry(self.frameTime, font=f"{mainFont} 14 bold", width=2,bg=f"{clockBG}",relief='solid', borderwidth=0, textvariable=self.minute).grid(row = 0, column= 1, padx = 5)
-        self.secondEntry = tk.Entry(self.frameTime, font=f"{mainFont} 14 bold", width=2,bg=f"{clockBG}",relief='solid', borderwidth=0, textvariable=self.second).grid(row = 0, column= 2, padx = 5)
+        self.frameTime = tk.Frame(self.master, bg=f"{CLOCKBG}")
+        self.hourEntry = tk.Entry(self.frameTime, font=f"{MAINFONT} 14 bold",bg=f"{CLOCKBG}", width=2, relief='solid', borderwidth=0, textvariable=self.hour).grid(row = 0, column= 0 , padx = 5)
+        self.minuteEntry = tk.Entry(self.frameTime, font=f"{MAINFONT} 14 bold", width=2,bg=f"{CLOCKBG}",relief='solid', borderwidth=0, textvariable=self.minute).grid(row = 0, column= 1, padx = 5)
+        self.secondEntry = tk.Entry(self.frameTime, font=f"{MAINFONT} 14 bold", width=2,bg=f"{CLOCKBG}",relief='solid', borderwidth=0, textvariable=self.second).grid(row = 0, column= 2, padx = 5)
         
         self.stop = 1
         self.breakTime = 0
 
         def calling():
-            global startList
+            global STARTLIST
             
-            startList = webpages.copy()
+            STARTLIST = WEBPAGES.copy()
 
             if self.breakTime == 0:
-                MyFunction.blockWebpages(webpages)
+                MyFunction.blockWebpages(WEBPAGES)
             else:
-                MyFunction.allowWebpages(webpages)
+                MyFunction.allowWebpages(WEBPAGES)
             global stop
             self.stop = 1
             temp = int(self.hour.get()) * 60 ** 2 + int(self.minute.get()) * 60 + int(self.second.get())    
@@ -214,13 +212,15 @@ class CountDown(tk.Frame):
         def countDown(temp):
             global stop
             global breakTime
-            MyFunction.allowWebpages(startList)
-            MyFunction.blockWebpages(webpages) 
+            MyFunction.allowWebpages(STARTLIST)
+            MyFunction.blockWebpages(WEBPAGES) 
             
-            mins, secs = divmod(temp, 60)
             hours = 0
-            if mins > 60:
-                hours, mins = divmod(mins, 60)
+            mins = temp // 60
+            if mins >= 60:
+                hours = mins //60
+                mins = mins % 60
+            secs = temp % 60
 
             self.hour.set("{0:02d}".format(hours))
             self.minute.set("{0:02d}".format(mins))
@@ -255,16 +255,16 @@ class CountDown(tk.Frame):
             global stop, breakTime
             self.stop = 0
             self.breakTime = 0   
-            MyFunction.allowWebpages(webpages)
+            MyFunction.allowWebpages(WEBPAGES)
             
             self.hour.set("00")
             self.minute.set("25")
             self.second.set("00")
 
-        self.frameBtn = tk.Frame(self.master, bg=f"{mainBG}")
-        self.sbmtBtn = tk.Button(self.frameBtn, text="Start",font=f"{mainFont} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{buttonBG}", command = calling).grid(row = 0, column= 0, padx = 15)
-        self.pauseBtn = tk.Button(self.frameBtn, text="Pause",font=f"{mainFont} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{buttonBG}", command = pauseCountDown).grid(row = 0, column= 1 , padx = 15)
-        self.breakBtn = tk.Button(self.frameBtn, text="Stop",font=f"{mainFont} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{buttonBG}", command = breakCountDown).grid(row = 0, column= 2, padx = 15)
+        self.frameBtn = tk.Frame(self.master, bg=f"{MAINBG}")
+        self.sbmtBtn = tk.Button(self.frameBtn, text="Start",font=f"{MAINFONT} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{BUTTONBG}", command = calling).grid(row = 0, column= 0, padx = 15)
+        self.pauseBtn = tk.Button(self.frameBtn, text="Pause",font=f"{MAINFONT} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{BUTTONBG}", command = pauseCountDown).grid(row = 0, column= 1 , padx = 15)
+        self.breakBtn = tk.Button(self.frameBtn, text="Stop",font=f"{MAINFONT} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{BUTTONBG}", command = breakCountDown).grid(row = 0, column= 2, padx = 15)
         
         self.frameTime.grid(row = 0, pady= 6)
         self.frameBtn.grid(row = 1, pady= 6)
@@ -274,13 +274,13 @@ class ToDoList(tk.Frame):
     
     def __init__(self,master=None,**kw):
         tk.Frame.__init__(self,master=master,**kw)
-        self.master.configure(bg=f"{mainBG}")
-        self.label2 = tk.Label(self.master, text="The To Do List", font=f"{mainFont} 13 bold", bg=f"{mainBG}").grid(row = 2, pady = 4)
+        self.master.configure(bg=f"{MAINBG}")
+        self.label2 = tk.Label(self.master, text="The To Do List", font=f"{MAINFONT} 13 bold", bg=f"{MAINBG}").grid(row = 2, pady = 4)
 
         #create todoList in frame
         self.listbox = tk.Listbox(
                                     self.master, 
-                                    font=f"{mainFont} 10",
+                                    font=f"{MAINFONT} 10",
                                     width= 38,
                                     height= 6,
                                     bg = "#ffffff",
@@ -297,16 +297,16 @@ class ToDoList(tk.Frame):
         self.listbox.config(yscrollcommand= self.listScroll.set)
         self.listScroll.config(command=self.listbox.yview)
 
-        self.entry = tk.Entry(self.master, width = 29,font=f"{mainFont} 10")
-        self.add = tk.Button(self.master, width= 6, relief='solid', borderwidth=.5,text="Add", font=f"{mainFont} 10 bold", bg=f"{buttonBG}", command= lambda: MyFunction.addToList(toDoListItems, self.listbox, self.entry))
+        self.entry = tk.Entry(self.master, width = 29,font=f"{MAINFONT} 10")
+        self.add = tk.Button(self.master, width= 6, relief='solid', borderwidth=.5,text="Add", font=f"{MAINFONT} 10 bold", bg=f"{BUTTONBG}", command= lambda: MyFunction.addToList(TODOLISTITEMS, self.listbox, self.entry))
         
-        self.entry.bind('<Return>', lambda event, a = toDoListItems,b = self.listbox,c = self.entry :MyFunction.addToList(a, b, c))
+        self.entry.bind('<Return>', lambda event, a = TODOLISTITEMS,b = self.listbox,c = self.entry :MyFunction.addToList(a, b, c))
 
-        self.frameBtn = tk.Frame(self.master, bg=f"{mainBG}")
-        self.up = tk.Button(self.frameBtn, text="Up", font=f"{mainFont} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{buttonBG}", command= lambda: MyFunction.pushUp(toDoListItems, self.listbox)).grid(row=0, column=0, padx=8, sticky= W)
-        self.down = tk.Button(self.frameBtn, text="Down", font=f"{mainFont} 10 bold", width=6, relief='solid', borderwidth=.5,bg=f"{buttonBG}", command= lambda: MyFunction.pushDown(toDoListItems, self.listbox)).grid(row=0, column=1, padx=8, sticky= W)
-        self.clear = tk.Button(self.frameBtn, text="Clear", font=f"{mainFont} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{buttonBG}", command= lambda: MyFunction.clearList(toDoListItems, self.listbox)).grid(row=0, column=2, padx=8, sticky= E)
-        self.delete = tk.Button(self.frameBtn, text="Del", font=f"{mainFont} 10 bold", width=6, relief='solid', borderwidth=.5,bg=f"{buttonBG}", command= lambda: MyFunction.removeFromList(toDoListItems, self.listbox)).grid(row=0, column=3, padx=8, sticky= E)
+        self.frameBtn = tk.Frame(self.master, bg=f"{MAINBG}")
+        self.up = tk.Button(self.frameBtn, text="Up", font=f"{MAINFONT} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{BUTTONBG}", command= lambda: MyFunction.pushUp(TODOLISTITEMS, self.listbox)).grid(row=0, column=0, padx=8, sticky= W)
+        self.down = tk.Button(self.frameBtn, text="Down", font=f"{MAINFONT} 10 bold", width=6, relief='solid', borderwidth=.5,bg=f"{BUTTONBG}", command= lambda: MyFunction.pushDown(TODOLISTITEMS, self.listbox)).grid(row=0, column=1, padx=8, sticky= W)
+        self.clear = tk.Button(self.frameBtn, text="Clear", font=f"{MAINFONT} 10 bold", width=6, relief='solid', borderwidth=.5, bg=f"{BUTTONBG}", command= lambda: MyFunction.clearList(TODOLISTITEMS, self.listbox)).grid(row=0, column=2, padx=8, sticky= E)
+        self.delete = tk.Button(self.frameBtn, text="Del", font=f"{MAINFONT} 10 bold", width=6, relief='solid', borderwidth=.5,bg=f"{BUTTONBG}", command= lambda: MyFunction.removeFromList(TODOLISTITEMS, self.listbox)).grid(row=0, column=3, padx=8, sticky= E)
         
         
         self.listbox.grid(row = 3, column= 0, sticky= W, padx=6)
@@ -317,7 +317,7 @@ class ToDoList(tk.Frame):
         self.frameBtn.grid(row = 5, column=0)
         
 
-        MyFunction.fillTheList(toDoListItems, self.listbox)
+        MyFunction.fillTheList(TODOLISTITEMS, self.listbox)
 
 
 class BlackList():
@@ -355,7 +355,7 @@ class BlackList():
         #place to add more item
         selfcontrolNewItem = Entry(win,width= 48, font="Arial 10")
         selfcontrolNewItem.pack(pady = 10)
-        selfcontrolNewItem.bind('<Return>', lambda event, a = webpages,b = selfcontrolList,c = selfcontrolNewItem : MyFunction.addToList(a, b, c))
+        selfcontrolNewItem.bind('<Return>', lambda event, a = WEBPAGES,b = selfcontrolList,c = selfcontrolNewItem : MyFunction.addToList(a, b, c))
 
 
         selfcontrolBtnFrame = Frame(win)
@@ -363,13 +363,13 @@ class BlackList():
 
         plusBtnFrame = Frame(selfcontrolBtnFrame, width = 100)
         plusBtnFrame.pack(side=RIGHT, padx = 10)
-        Button(plusBtnFrame, text="+", font=f"{mainFont} 10 bold",bg=f"{buttonBG}", relief='solid', borderwidth=.5, width = 3, height= 1, command= lambda: MyFunction.addToList(webpages, selfcontrolList, selfcontrolNewItem)).pack(side=RIGHT, fill = X)
-        Button(plusBtnFrame, text="-", font=f"{mainFont} 10 bold",bg=f"{buttonBG}", relief='solid', borderwidth=.5, width = 3, height= 1, command= lambda: MyFunction.removeFromList(webpages, selfcontrolList)).pack(side=LEFT, fill = X, padx = 15)
+        Button(plusBtnFrame, text="+", font=f"{MAINFONT} 10 bold",bg=f"{BUTTONBG}", relief='solid', borderwidth=.5, width = 3, height= 1, command= lambda: MyFunction.addToList(WEBPAGES, selfcontrolList, selfcontrolNewItem)).pack(side=RIGHT, fill = X)
+        Button(plusBtnFrame, text="-", font=f"{MAINFONT} 10 bold",bg=f"{BUTTONBG}", relief='solid', borderwidth=.5, width = 3, height= 1, command= lambda: MyFunction.removeFromList(WEBPAGES, selfcontrolList)).pack(side=LEFT, fill = X, padx = 15)
 
 
-        Button(selfcontrolBtnFrame, text="Import", font=f"{mainFont} 10 bold",bg=f"{buttonBG}", relief='solid', borderwidth=.5, width = 12, height= 1, command= lambda: MyFunction.importBasicWebsites(webpages, selfcontrolList)).pack(side=LEFT, anchor=E, padx = 50)
+        Button(selfcontrolBtnFrame, text="Import", font=f"{MAINFONT} 10 bold",bg=f"{BUTTONBG}", relief='solid', borderwidth=.5, width = 12, height= 1, command= lambda: MyFunction.importBasicWebsites(WEBPAGES, selfcontrolList)).pack(side=LEFT, anchor=E, padx = 50)
 
-        MyFunction.fillTheList(webpages, selfcontrolList)
+        MyFunction.fillTheList(WEBPAGES, selfcontrolList)
 
 
 class FailMessage():
@@ -397,11 +397,11 @@ class MainApp(tk.Frame):
         self.master.geometry("288x400")
         self.master.title('SelfControl')
         self.master.resizable(False, False)
-        self.master.configure(bg=f"{mainBG}")
+        self.master.configure(bg=f"{MAINBG}")
 
-        self.label1 = tk.Label(self.master, text="SELF CONTROL", font=f"{mainFont} 11 bold", bg=f"{mainBG}").grid(row=0, column = 0, pady= 10)
+        self.label1 = tk.Label(self.master, text="SELF CONTROL", font=f"{MAINFONT} 11 bold", bg=f"{MAINBG}").grid(row=0, column = 0, pady= 10)
 
-        self.button1 = tk.Button(self.master, text="Edit blacklist", font=f"{mainFont} 10 bold", relief='solid', borderwidth=.5, width = 12, height= 1, bg=f"{buttonBG}",  command=BlackList.goToBlacklist).grid(row=1, column = 0, pady= 6)
+        self.button1 = tk.Button(self.master, text="Edit blacklist", font=f"{MAINFONT} 10 bold", relief='solid', borderwidth=.5, width = 12, height= 1, bg=f"{BUTTONBG}",  command=BlackList.goToBlacklist).grid(row=1, column = 0, pady= 6)
 
         self.countDown = CountDown(master=self)
         self.countDown.grid()
@@ -414,15 +414,15 @@ class MainApp(tk.Frame):
 def onClosing():
 
     if tk.messagebox.askokcancel("Quit", "Before you quit,\nplease stop the countdown\nwith the \"stop\" button"):
-        MyFunction.allowWebpages(startList)
-        MyFunction.allowWebpages(webpages)
-        MyFunction.saveData(webpages, "web")
-        MyFunction.saveData(toDoListItems, "todo")
+        MyFunction.allowWebpages(STARTLIST)
+        MyFunction.allowWebpages(WEBPAGES)
+        MyFunction.saveData(WEBPAGES, "web")
+        MyFunction.saveData(TODOLISTITEMS, "todo")
         root.destroy()
     
 
-MyFunction.readData(webpages, "web")
-MyFunction.readData(toDoListItems, "todo")
+MyFunction.readData(WEBPAGES, "web")
+MyFunction.readData(TODOLISTITEMS, "todo")
 
 #if __name__ == '__main__':
 
